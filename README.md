@@ -1,0 +1,1 @@
+https://aws.amazon.com/blogs/compute/best-practices-for-organizing-larger-serverless-applications/

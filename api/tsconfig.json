@@ -1,0 +1,33 @@
+{
+    "compilerOptions": {
+        "module": "CommonJS",
+        "target": "ES2017",
+        "lib": ["ES2017", "dom"],
+        "noImplicitAny": true,
+        "preserveConstEnums": true,
+        "outDir": "./dist",
+        "esModuleInterop": true,
+        "strict": true,
+        "pretty": false,
+        "extendedDiagnostics": false,
+        "incremental": true,
+        "removeComments": true,
+        "strictNullChecks": true,
+        "noImplicitThis": true,
+        "alwaysStrict": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": false,
+        "inlineSourceMap": true,
+        "inlineSources": true,
+        "experimentalDecorators": true,
+        "strictPropertyInitialization": true,
+        "preserveSymlinks": true,
+        "typeRoots": ["./node_modules/@types"],
+        "types": ["node"]
+    },
+
+    "include": ["src"],
+    "exclude": ["node_modules", "__tests__", "**/*.test.ts"]
+}
