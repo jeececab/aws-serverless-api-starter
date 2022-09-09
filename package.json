@@ -1,7 +1,7 @@
 {
   "name": "aws-serverless-api",
   "version": "1.0.0",
-  "description": "AWS Serveless API starter",
+  "description": "AWS Serveless API",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
