@@ -1,64 +1,33 @@
-import { NotImplementedException } from '../exceptions/all';
-import { IHttpRequest } from './HttpRequest';
 import { IHttpResponse } from './HttpResponse';
 
 export type IAuthenticatedUser = { id: string } | null; // TODO: create user props interface
 
-interface IBaseController {
-    name: string;
-}
-
-export class BaseController implements IBaseController {
-    name!: string;
-
-    setName(name: string) {
-        this.name = name;
-    }
-
-    async processRequest(
-        httpRequest: IHttpRequest,
-        httpResponse: IHttpResponse,
-        _loggedUser: IAuthenticatedUser
-    ): Promise<IHttpResponse> {
-        switch (true) {
-            case httpRequest.isGet():
-                if (httpRequest.isWithId()) {
-                    await this.read();
-                } else {
-                    await this.readMany();
-                }
-                break;
-            case httpRequest.isPost():
-                await this.create();
-                break;
-            case httpRequest.isPut():
-                await this.update();
-                break;
-            case httpRequest.isDelete():
-                await this.delete();
-                break;
-        }
-
+export class BaseController {
+    async read(httpResponse: IHttpResponse): Promise<IHttpResponse> {
+        httpResponse.setStatusCode(200).setBody({ id: '1', name: 'John' });
         return httpResponse;
     }
 
-    async read() {
-        throw new NotImplementedException();
+    async readMany(httpResponse: IHttpResponse): Promise<IHttpResponse> {
+        httpResponse.setStatusCode(200).setBody([
+            { id: '1', name: 'John' },
+            { id: '2', name: 'Lucy' },
+        ]);
+        return httpResponse;
     }
 
-    async readMany() {
-        throw new NotImplementedException();
+    async create(httpResponse: IHttpResponse): Promise<IHttpResponse> {
+        httpResponse.setStatusCode(201).setBody({ id: '3', name: 'SomeNewUser' });
+        return httpResponse;
     }
 
-    async create() {
-        throw new NotImplementedException();
+    async update(httpResponse: IHttpResponse): Promise<IHttpResponse> {
+        httpResponse.setStatusCode(200).setBody({ id: '3', name: 'ModifiedUser' });
+        return httpResponse;
     }
 
-    async update() {
-        throw new NotImplementedException();
-    }
-
-    async delete() {
-        throw new NotImplementedException();
+    async delete(httpResponse: IHttpResponse): Promise<IHttpResponse> {
+        httpResponse.setStatusCode(200);
+        return httpResponse;
     }
 }

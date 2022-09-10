@@ -1,10 +1,10 @@
 {
-  "name": "aws-serverless-api",
-  "version": "1.0.0",
-  "description": "AWS Serveless API",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Jean-Christophe Séguin Cabana",
-  "license": "ISC"
+    "name": "aws-serverless-api",
+    "version": "1.0.0",
+    "description": "AWS Serveless API",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Jean-Christophe Séguin Cabana",
+    "license": "ISC"
 }

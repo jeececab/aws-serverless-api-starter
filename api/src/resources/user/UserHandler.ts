@@ -5,7 +5,7 @@ import { HttpResponse, IHttpResponse } from '../../baseClasses/HttpResponse';
 import { IBaseException } from '../../exceptions/all';
 import { IAuthenticatedUser } from '../../baseClasses/BaseController';
 
-import { UserController } from './UserController';
+import { UserRouter } from './UserRouter';
 
 export async function handler(event: APIGatewayProxyEvent, _context: Context): Promise<IHttpResponse> {
     const httpRequest = new HttpRequest(event);
@@ -19,9 +19,9 @@ export async function handler(event: APIGatewayProxyEvent, _context: Context): P
             loggedUser = { id: 'TODO' };
         }
 
-        const userController = new UserController();
+        const userRouter = new UserRouter();
 
-        processedResponse = await userController.processRequest(httpRequest, httpResponse, loggedUser);
+        processedResponse = await userRouter.processRequest(httpRequest, httpResponse, loggedUser);
     } catch (error) {
         processedResponse = httpResponse.setException(error as IBaseException);
     }

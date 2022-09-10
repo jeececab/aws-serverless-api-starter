@@ -2,8 +2,8 @@ import {
     APIGatewayProxyEvent,
     APIGatewayProxyEventMultiValueHeaders,
     APIGatewayProxyEventMultiValueQueryStringParameters,
+    APIGatewayProxyEventPathParameters,
 } from 'aws-lambda';
-import { NotImplementedException } from '../exceptions/all';
 
 enum EHttpMethod {
     GET = 'GET',
@@ -15,6 +15,7 @@ enum EHttpMethod {
 export interface IHttpRequest {
     claims: { [key: string]: string } | null;
     path: string;
+    pathParameters: APIGatewayProxyEventPathParameters | null;
     method: EHttpMethod;
     multiValueQueryStringParameters: APIGatewayProxyEventMultiValueQueryStringParameters | null;
     multiValueHeaders: APIGatewayProxyEventMultiValueHeaders;
@@ -38,6 +39,7 @@ export interface IHttpRequest {
 export class HttpRequest implements IHttpRequest {
     claims: { [key: string]: string } | null;
     path: string;
+    pathParameters: APIGatewayProxyEventPathParameters | null;
     method: EHttpMethod;
     multiValueQueryStringParameters: APIGatewayProxyEventMultiValueQueryStringParameters | null;
     multiValueHeaders: APIGatewayProxyEventMultiValueHeaders;
@@ -49,6 +51,7 @@ export class HttpRequest implements IHttpRequest {
         const {
             httpMethod,
             path,
+            pathParameters,
             multiValueHeaders,
             multiValueQueryStringParameters,
             body,
@@ -58,6 +61,7 @@ export class HttpRequest implements IHttpRequest {
 
         this.claims = requestContext.authorizer ? requestContext.authorizer.claims : null;
         this.path = path;
+        this.pathParameters = pathParameters;
         this.method = httpMethod as unknown as EHttpMethod;
         this.multiValueQueryStringParameters = multiValueQueryStringParameters;
         this.multiValueHeaders = multiValueHeaders;
@@ -70,7 +74,7 @@ export class HttpRequest implements IHttpRequest {
     }
 
     isWithId(): boolean {
-        throw new NotImplementedException();
+        return Boolean(this.pathParameters);
     }
 
     isGet(): boolean {
@@ -94,7 +98,7 @@ export class HttpRequest implements IHttpRequest {
             return;
         }
 
-        return this.multiValueHeaders[key.toLowerCase()];
+        return this.multiValueHeaders[key];
     }
 
     getRawBody(): string | null {

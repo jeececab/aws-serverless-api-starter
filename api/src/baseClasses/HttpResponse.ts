@@ -2,23 +2,22 @@ import { IBaseException } from '../exceptions/all';
 
 export interface IHttpResponse {
     headers: { [key: string]: string };
-    statusCode: number;
-    body: string;
+    statusCode: number | null;
+    body: string | null;
 
     setHeader: (key: string, value: any) => IHttpResponse;
     setStatusCode: (code: number) => IHttpResponse;
-    getStatusCode: () => number;
     setBody: (value: object | string) => IHttpResponse;
     setException: (error: IBaseException) => IHttpResponse;
 }
 
 export class HttpResponse implements IHttpResponse {
     headers: { [key: string]: string };
-    statusCode: number;
+    statusCode: number | null;
     body!: string;
 
     constructor(requestOrigin: string) {
-        this.statusCode = 200;
+        this.statusCode = null;
         this.headers = {};
 
         this.setHeader('Vary', 'Origin');
@@ -34,10 +33,6 @@ export class HttpResponse implements IHttpResponse {
     setStatusCode(code: number): IHttpResponse {
         this.statusCode = code;
         return this;
-    }
-
-    getStatusCode(): number {
-        return this.statusCode;
     }
 
     setBody(value: object | string): IHttpResponse {

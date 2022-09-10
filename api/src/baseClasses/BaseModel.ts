@@ -32,7 +32,7 @@ export class BaseModel implements IBaseModel {
         return this;
     }
 
-    // DynamoDb if required (mutable data)
+    // DynamoDb if required
     composeId(pk: string, sk?: string): string {
         if (pk.includes('#')) {
             throw new Error('PK should only include raw value');
