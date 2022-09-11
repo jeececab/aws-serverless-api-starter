@@ -33,6 +33,7 @@ export interface IHttpRequest {
     getHeader(key: string): string | string[] | undefined;
     getRawBody(): string | null;
     getBody(): string | null;
+    getPathParam(name: string): string | undefined;
     getQueryParam(name: string): string | string[] | undefined;
 }
 
@@ -123,6 +124,14 @@ export class HttpRequest implements IHttpRequest {
         }
 
         return this.body;
+    }
+
+    getPathParam(name: string): string | undefined {
+        if (!this.pathParameters) {
+            return;
+        }
+
+        return this.pathParameters[name];
     }
 
     getQueryParam(name: string): string | string[] | undefined {

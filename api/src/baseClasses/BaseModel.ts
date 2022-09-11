@@ -23,13 +23,6 @@ export class BaseModel implements IBaseModel {
     tableName?: string;
     s3PathName?: string;
 
-    constructor(id?: string, created?: string, updated?: string, version?: number) {
-        this.id = id;
-        this.created = created;
-        this.updated = updated;
-        this.version = version;
-    }
-
     // HTTP
     fromJSON(json: IBaseModel): this {
         this.id = json.id;

@@ -4,13 +4,14 @@ import { BaseManager } from './BaseManager';
 import { IHttpRequest } from './HttpRequest';
 import { IHttpResponse } from './HttpResponse';
 import { BadRequestException, ServerErrorException } from '../exceptions/all';
+import { BaseModel, IBaseModel } from './BaseModel';
 
 const ajv = new Ajv();
 
 export type IAuthenticatedUser = { id: string } | null; // TODO: create user props interface
 
 export class BaseController {
-    entity: any;
+    entity: typeof BaseModel;
     manager: BaseManager;
     validate: ValidateFunction;
 
@@ -20,12 +21,19 @@ export class BaseController {
         this.validate = ajv.compile(entity.jsonSchema);
     }
 
-    async read(httpResponse: IHttpResponse): Promise<IHttpResponse> {
-        httpResponse.setStatusCode(200).setBody({ id: '1', name: 'John' });
-        return httpResponse;
+    async read(httpRequest: IHttpRequest, httpResponse: IHttpResponse): Promise<IHttpResponse> {
+        const entityId = httpRequest.getPathParam('id');
+
+        if (!entityId) {
+            throw new BadRequestException('ID path parameter is required');
+        }
+
+        const entity = await this.manager.read(entityId);
+
+        return httpResponse.setStatusCode(200).setBody(entity);
     }
 
-    async readMany(httpResponse: IHttpResponse): Promise<IHttpResponse> {
+    async readMany(_httpRequest: IHttpRequest, httpResponse: IHttpResponse): Promise<IHttpResponse> {
         httpResponse.setStatusCode(200).setBody([
             { id: '1', name: 'John' },
             { id: '2', name: 'Lucy' },
@@ -34,7 +42,13 @@ export class BaseController {
     }
 
     async create(httpRequest: IHttpRequest, httpResponse: IHttpResponse): Promise<IHttpResponse> {
-        const candidate = new this.entity().fromJSON(httpRequest.getBody());
+        const body = httpRequest.getBody();
+
+        if (!body) {
+            throw new BadRequestException('Body is required');
+        }
+
+        const candidate = new this.entity().fromJSON(body as IBaseModel);
 
         const isValid = this.validate(candidate.toJSON());
 
@@ -48,20 +62,40 @@ export class BaseController {
             throw new BadRequestException(JSON.stringify(errors[0]));
         }
 
-        await this.manager.create(candidate);
+        const item = await this.manager.create(candidate);
 
-        httpResponse.setStatusCode(201).setBody(candidate);
-
-        return httpResponse;
+        return httpResponse.setStatusCode(201).setBody(item);
     }
 
-    async update(httpResponse: IHttpResponse): Promise<IHttpResponse> {
-        httpResponse.setStatusCode(200).setBody({ id: '3', name: 'ModifiedUser' });
-        return httpResponse;
+    async update(httpRequest: IHttpRequest, httpResponse: IHttpResponse): Promise<IHttpResponse> {
+        const entityId = httpRequest.getPathParam('id');
+
+        if (!entityId) {
+            throw new BadRequestException('ID path parameter is required');
+        }
+
+        const body = httpRequest.getBody();
+
+        if (!body) {
+            throw new BadRequestException('Body is required');
+        }
+
+        const candidate = new this.entity().fromJSON(body as IBaseModel);
+
+        const item = await this.manager.update(entityId, candidate);
+
+        return httpResponse.setStatusCode(200).setBody(item);
     }
 
-    async delete(httpResponse: IHttpResponse): Promise<IHttpResponse> {
-        httpResponse.setStatusCode(200);
-        return httpResponse;
+    async delete(httpRequest: IHttpRequest, httpResponse: IHttpResponse): Promise<IHttpResponse> {
+        const entityId = httpRequest.getPathParam('id');
+
+        if (!entityId) {
+            throw new BadRequestException('ID path parameter is required');
+        }
+
+        await this.manager.delete(entityId);
+
+        return httpResponse.setStatusCode(200);
     }
 }

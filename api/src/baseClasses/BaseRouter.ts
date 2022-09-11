@@ -22,16 +22,16 @@ export class BaseRouter {
         switch (true) {
             case httpRequest.isGet():
                 if (httpRequest.isWithId()) {
-                    return await controller.read(httpResponse);
+                    return await controller.read(httpRequest, httpResponse);
                 } else {
-                    return await controller.readMany(httpResponse);
+                    return await controller.readMany(httpRequest, httpResponse);
                 }
             case httpRequest.isPost():
                 return await controller.create(httpRequest, httpResponse);
             case httpRequest.isPut():
-                return await controller.update(httpResponse);
+                return await controller.update(httpRequest, httpResponse);
             case httpRequest.isDelete():
-                return await controller.delete(httpResponse);
+                return await controller.delete(httpRequest, httpResponse);
             default:
                 return httpResponse;
         }

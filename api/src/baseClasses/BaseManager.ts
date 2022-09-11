@@ -43,11 +43,13 @@ export class BaseManager {
         return await this.dao.create(candidate);
     }
 
-    async update(candidate: typeof this.entity): Promise<typeof this.entity> {
-        return candidate;
+    async update(id: string, candidate: typeof this.entity): Promise<typeof this.entity> {
+        candidate.updated = new Date().toISOString();
+
+        return await this.dao.update(id, candidate);
     }
 
     async delete(id: string): Promise<string> {
-        return id;
+        return await this.dao.delete(id);
     }
 }

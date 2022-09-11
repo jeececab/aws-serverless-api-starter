@@ -5,7 +5,15 @@ export class S3Dao {
         this.pathName = pathName;
     }
 
-    create(entity: any) {
-        return entity;
+    async create(candidate: any) {
+        return candidate;
+    }
+
+    async update(id: string, candidate: any) {
+        return { ...candidate, id, created: 'some_date' };
+    }
+
+    async delete(id: string) {
+        return id;
     }
 }
