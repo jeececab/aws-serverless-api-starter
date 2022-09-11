@@ -27,7 +27,7 @@ export class BaseRouter {
                     return await controller.readMany(httpResponse);
                 }
             case httpRequest.isPost():
-                return await controller.create(httpResponse);
+                return await controller.create(httpRequest, httpResponse);
             case httpRequest.isPut():
                 return await controller.update(httpResponse);
             case httpRequest.isDelete():

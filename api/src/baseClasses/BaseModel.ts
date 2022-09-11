@@ -1,6 +1,6 @@
-interface IBaseModel {
+export interface IBaseModel {
     id?: string;
-    created: string;
+    created?: string;
     updated?: string;
     version?: number;
 }
@@ -16,20 +16,37 @@ interface IBaseS3Model extends IBaseModel {
 
 export class BaseModel implements IBaseModel {
     id?: string;
-    created!: string;
+    created?: string;
     updated?: string;
     version?: number;
 
+    tableName?: string;
+    s3PathName?: string;
+
+    constructor(id?: string, created?: string, updated?: string, version?: number) {
+        this.id = id;
+        this.created = created;
+        this.updated = updated;
+        this.version = version;
+    }
+
     // HTTP
-    fromHttp(payload: IBaseModel): this {
-        this.updated = payload.updated;
-        this.version = payload.version;
+    fromJSON(json: IBaseModel): this {
+        this.id = json.id;
+        this.created = json.created;
+        this.updated = json.updated;
+        this.version = json.version;
 
         return this;
     }
 
-    toHttp(): IBaseModel {
-        return this;
+    toJSON(): IBaseModel {
+        return {
+            id: this.id,
+            created: this.created,
+            updated: this.updated,
+            version: this.version,
+        };
     }
 
     // DynamoDb if required
