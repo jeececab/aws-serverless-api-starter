@@ -22,8 +22,7 @@ export interface IHttpRequest {
     isBase64Encoded: Boolean;
     body: string | null;
 
-    isAuthenticated(): boolean;
-    isWithId(): boolean;
+    hasPathId(): boolean;
 
     isGet(): boolean;
     isPost(): boolean;
@@ -31,7 +30,6 @@ export interface IHttpRequest {
     isDelete(): boolean;
 
     getHeader(key: string): string | string[] | undefined;
-    getRawBody(): string | null;
     getBody(): string | null;
     getPathParam(name: string): string | undefined;
     getQueryParam(name: string): string | string[] | undefined;
@@ -70,12 +68,8 @@ export class HttpRequest implements IHttpRequest {
         this.rawBody = body;
     }
 
-    isAuthenticated(): boolean {
-        return Boolean(this.claims);
-    }
-
-    isWithId(): boolean {
-        return Boolean(this.pathParameters);
+    hasPathId(): boolean {
+        return Boolean(this.pathParameters?.id);
     }
 
     isGet(): boolean {
@@ -102,13 +96,9 @@ export class HttpRequest implements IHttpRequest {
         return this.multiValueHeaders[key];
     }
 
-    getRawBody(): string | null {
-        return this.rawBody;
-    }
-
     getBody(): string | null {
         if (!this.body) {
-            let body = this.getRawBody();
+            let body = this.rawBody;
 
             if (!body) {
                 return null;

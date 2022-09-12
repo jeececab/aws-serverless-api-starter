@@ -3,7 +3,7 @@ import { APIGatewayProxyEvent, Context } from 'aws-lambda';
 import { HttpRequest } from '../../baseClasses/HttpRequest';
 import { HttpResponse, IHttpResponse } from '../../baseClasses/HttpResponse';
 import { IBaseException } from '../../exceptions/all';
-import { IAuthenticatedUser } from '../../baseClasses/BaseController';
+import { IAuthenticatedUser } from '../../baseClasses/BaseRouter';
 
 import { UserRouter } from './UserRouter';
 
@@ -11,12 +11,12 @@ export async function handler(event: APIGatewayProxyEvent, _context: Context): P
     const httpRequest = new HttpRequest(event);
     const httpResponse = new HttpResponse(httpRequest.getHeader('Origin') as string);
 
-    let processedResponse;
     let loggedUser: IAuthenticatedUser = null;
+    let processedResponse;
 
     try {
-        if (httpRequest.isAuthenticated()) {
-            loggedUser = { id: 'TODO' };
+        if (httpRequest.claims) {
+            loggedUser = { id: httpRequest.claims.id };
         }
 
         const userRouter = new UserRouter();

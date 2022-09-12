@@ -1,8 +1,9 @@
-import { IAuthenticatedUser } from '../../baseClasses/BaseController';
+import { IAuthenticatedUser } from '../../baseClasses/BaseRouter';
 import { BaseRouter } from '../../baseClasses/BaseRouter';
 import { IHttpRequest } from '../../baseClasses/HttpRequest';
 import { IHttpResponse } from '../../baseClasses/HttpResponse';
 import { UserController } from './UserController';
+import { NotAuthenticatedException } from '../../exceptions/all';
 
 export class UserRouter extends BaseRouter {
     controller: UserController;
@@ -17,12 +18,14 @@ export class UserRouter extends BaseRouter {
         httpResponse: IHttpResponse,
         loggedUser: IAuthenticatedUser
     ): Promise<IHttpResponse> {
+        if (!loggedUser) {
+            throw new NotAuthenticatedException();
+        }
+
         if (httpRequest.isGet() && httpRequest.pathParameters?.userId === 'me') {
             return await this.controller.getMe(httpResponse, loggedUser);
         }
 
-        httpResponse = await super.processRequest(httpRequest, httpResponse, loggedUser, this.controller);
-
-        return httpResponse;
+        return await super.processRequest(httpRequest, httpResponse, loggedUser);
     }
 }

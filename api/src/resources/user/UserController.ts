@@ -1,5 +1,6 @@
-import { BaseController, IAuthenticatedUser } from '../../baseClasses/BaseController';
+import { BaseController } from '../../baseClasses/BaseController';
 import { IHttpResponse } from '../../baseClasses/HttpResponse';
+import { IAuthenticatedUser } from '../../baseClasses/BaseRouter';
 import { IBaseException, NotAuthenticatedException } from '../../exceptions/all';
 import { User } from './UserModel';
 
@@ -14,7 +15,7 @@ export class UserController extends BaseController {
                 throw new NotAuthenticatedException();
             }
 
-            httpResponse.setStatusCode(200).setBody(loggedUser);
+            httpResponse.setStatusCode(200).setBody(loggedUser); // TODO: fetch user record in DynamoDb
         } catch (error) {
             httpResponse.setException(error as IBaseException);
         }

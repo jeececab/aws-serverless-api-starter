@@ -8,8 +8,6 @@ import { BaseModel, IBaseModel } from './BaseModel';
 
 const ajv = new Ajv();
 
-export type IAuthenticatedUser = { id: string } | null; // TODO: create user props interface
-
 export class BaseController {
     entity: typeof BaseModel;
     manager: BaseManager;
